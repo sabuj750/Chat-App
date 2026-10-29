@@ -29,6 +29,11 @@ export const protectRoute = async (req , res , next) => {
   req.user = user;
   next();
  }catch(err){
+  if (err instanceof jwt.JsonWebTokenError) {
+    return res.status(401).json({
+      message: "Not authorized, invalid or expired token",
+    });
+  }
   console.error("Error in protectRoute middleware:", err);
   res.status(500).json({
     message: "Internal server error",
